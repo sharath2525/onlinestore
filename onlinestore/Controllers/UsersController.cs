@@ -26,7 +26,7 @@ namespace onlinestore.Controllers
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -34,7 +34,7 @@ namespace onlinestore.Controllers
             }
 
             var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Username == id);
             if (user == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace onlinestore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,PasswordHash,Email,FirstName,LastName,Address,PhoneNumber,Role")] User user)
+        public async Task<IActionResult> Create([Bind("Username,Email,Password")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace onlinestore.Controllers
         }
 
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -86,9 +86,9 @@ namespace onlinestore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,PasswordHash,Email,FirstName,LastName,Address,PhoneNumber,Role")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Username,Email,Password")] User user)
         {
-            if (id != user.Id)
+            if (id != user.Username)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace onlinestore.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!UserExists(user.Username))
                     {
                         return NotFound();
                     }
@@ -117,7 +117,7 @@ namespace onlinestore.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
@@ -125,7 +125,7 @@ namespace onlinestore.Controllers
             }
 
             var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Username == id);
             if (user == null)
             {
                 return NotFound();
@@ -137,7 +137,7 @@ namespace onlinestore.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _context.User.FindAsync(id);
             if (user != null)
@@ -149,9 +149,9 @@ namespace onlinestore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(string id)
         {
-            return _context.User.Any(e => e.Id == id);
+            return _context.User.Any(e => e.Username == id);
         }
     }
 }
